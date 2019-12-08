@@ -39,33 +39,44 @@ public class Network {
                 this.biases.add(i, b);
             }
         }
+
+
+        this.dbiases = (ArrayList<double[][]>) this.biases.clone();
+        this.dweights = (ArrayList<double[][]>) this.weights.clone();
+        this.dzeights = (ArrayList<double[][]>) this.weights.clone();
     }
 
-    public double forwardProp(double[][] X, double[][] Y) {
+    public double forwardProp(double[][] X, double[][] Y, int epoch) {
         // iterate over total layers forward
         for (int i = 0; i < this.weights.size(); i++) {
             // first layer
             if (i == 0) {
                 double[][] Z = np.add(np.dot(this.weights.get(i), X), this.biases.get(i));
                 // add assumptions to list
-                this.A.add(i, np.sigmoid(Z));
+                if (epoch == 0) {
+                    this.A.add(i, np.sigmoid(Z));
+                }
+                else {
+                    this.A.set(i, np.sigmoid(Z));
+                }
             }
             // hidden or last layers
             else {
                 double[][] Z = np.add(np.dot(this.weights.get(i), this.A.get(i-1)), this.biases.get(i));
                 // add assumptions to list
-                this.A.add(i, np.sigmoid(Z));
+                if (epoch == 0) {
+                    this.A.add(i, np.sigmoid(Z));
+                }
+                else {
+                    this.A.set(i, np.sigmoid(Z));
+                }
             }
         }
         // returns cost of epoch
-        return np.cross_entropy(this.A.size(),Y, this.A.get(A.size()-1));
+        return np.cross_entropy(output_shape[0],Y, this.A.get(A.size()-1));
     }
 
     public void backProp(double[][] X, double[][] Y) {
-
-        this.dbiases = (ArrayList<double[][]>) this.biases.clone();
-        this.dweights = (ArrayList<double[][]>) this.weights.clone();
-        this.dzeights = (ArrayList<double[][]>) this.weights.clone();
 
         for (int i = this.layers - 1; i >= 0; i--) {
 
@@ -91,9 +102,9 @@ public class Network {
                 // check output dimensions
                 dW = np.divide(np.dot(dZ, np.T(this.A.get(i- 1))), this.output_shape[0]);
                 db = np.divide(dZ, this.output_shape[0]);
-                this.dweights.add(i, dW);
-                this.dzeights.add(i, dZ);
-                this.dbiases.add(i, db);
+                this.dweights.set(i, dW);
+                this.dzeights.set(i, dZ);
+                this.dbiases.set(i, db);
             }
             // first layer
             else if (i == 0) {
@@ -118,9 +129,9 @@ public class Network {
                         np.subtract(1.0, np.power(this.A.get(i), 2)));
                 dW = np.divide(np.dot(dZ, np.T(X)), this.output_shape[0]);
                 db = np.divide(dZ, this.output_shape[0]);
-                this.dweights.add(i, dW);
-                this.dbiases.add(i, db);
-                this.dzeights.add(i, dZ);
+                this.dweights.set(i, dW);
+                this.dbiases.set(i, db);
+                this.dzeights.set(i, dZ);
             }
             else {
 //                System.out.printf("Hidden layer: %d\n", i);
@@ -128,9 +139,9 @@ public class Network {
                 dZ = np.multiply(np.dot(np.T(this.weights.get(i+1)), this.dweights.get(i+1)), np.subtract(1.0, np.power(this.A.get(i), 2)));
                 dW = np.divide(np.dot(dZ, np.T(this.A.get(i+1))), this.output_shape[0]);
                 db = np.divide(dZ, this.output_shape[0]);
-                this.dweights.add(i, dW);
-                this.dbiases.add(i, db);
-                this.dzeights.add(i, dZ);
+                this.dweights.set(i, dW);
+                this.dbiases.set(i, db);
+                this.dzeights.set(i, dZ);
             }
         }
     }

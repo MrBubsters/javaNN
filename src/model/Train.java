@@ -16,8 +16,6 @@ public class Train {
         printf("input (%d,%d)\n", input_shape[0], input_shape[1]);
         printf("output (%d,%d)\n", output_shape[0], output_shape[1]);
 
-        int nodes = 400;
-
         X = np.T(X);
         Y = np.T(Y);
 
@@ -26,7 +24,7 @@ public class Train {
 
         for (int i = 0; i < 1000; i++) {
 
-            double cost = model.forwardProp(X, Y);
+            double cost = model.forwardProp(X, Y, i);
             model.backProp(X, Y);
             model.gradientDescent();
 
