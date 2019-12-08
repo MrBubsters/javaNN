@@ -27,18 +27,15 @@ public class NN {
 
         double[][] W1 = np.random(nodes, 2);
         double[][] b1 = new double[nodes][m];
-        System.out.println(np.shape(W1));
 
         double[][] W2 = np.random(1, nodes);
         double[][] b2 = new double[1][m];
-        System.out.println(np.shape(W2));
 
-        for (int i = 0; i < 4000; i++) {
+        for (int i = 0; i < 1000; i++) {
             // Foward Prop
             // LAYER 1
             double[][] Z1 = np.add(np.dot(W1, X), b1);
             double[][] A1 = np.sigmoid(Z1);
-            System.out.println(np.shape(A1));
 
             //LAYER 2
             double[][] Z2 = np.add(np.dot(W2, A1), b2);
@@ -51,9 +48,18 @@ public class NN {
             //LAYER 2
             double[][] dZ2 = np.subtract(A2, Y);
             double[][] dW2 = np.divide(np.dot(dZ2, np.T(A1)), m);
+//            System.out.println(np.shape(dZ2));
+//            System.out.println(np.shape(np.T(A1)));
+//            System.out.println(m);
+//            System.out.println(np.shape(dW2));
             double[][] db2 = np.divide(dZ2, m);
 
             //LAYER 1
+//            System.out.println(np.shape(np.dot(np.T(W2), dZ2)));
+//            System.out.println(np.shape(np.T(W2)));
+//            System.out.println(np.shape(dZ2));
+//            System.out.println(np.shape(np.subtract(1.0, np.power(A1, 2))));
+//            System.out.println(np.shape(A1));
             double[][] dZ1 = np.multiply(np.dot(np.T(W2), dZ2), np.subtract(1.0, np.power(A1, 2)));
             double[][] dW1 = np.divide(np.dot(dZ1, np.T(X)), m);
             double[][] db1 = np.divide(dZ1, m);

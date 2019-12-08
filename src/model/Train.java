@@ -24,10 +24,11 @@ public class Train {
         Network model = new Network(2, 512, input_shape, output_shape);
 
 
-        for (int i = 0; i < 4000; i++) {
+        for (int i = 0; i < 1000; i++) {
 
             double cost = model.forwardProp(X, Y);
             model.backProp(X, Y);
+            model.gradientDescent();
 
             if (i % 400 == 0) {
                 printf("__________________\n");
