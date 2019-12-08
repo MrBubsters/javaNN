@@ -11,6 +11,7 @@ public class Network {
     ArrayList<double[][]> weights = new ArrayList<double[][]>();
     ArrayList<double[][]> dweights = new ArrayList<double[][]>();
     ArrayList<double[][]> biases = new ArrayList<double[][]>();
+    ArrayList<double[][]> dbiases = new ArrayList<double[][]>();
     ArrayList<double[][]> A = new ArrayList<double[][]>();
     private int[] output_shape;
 
@@ -23,17 +24,20 @@ public class Network {
 
 
         for (int i = 0; i < layers; i++) {
+
+            System.out.println(output_shape[0]);
+            System.out.println(output_shape[1]);
             if (i + 1 == layers) {
                 double[][] w = np.random(output_shape[1], nodes);
-                this.weights.add(w);
+                this.weights.add(i, w);
                 double[][] b = new double[output_shape[1]][output_shape[0]];
-                this.biases.add(b);
+                this.biases.add(i, b);
             }
             else {
                 double[][] w = np.random(nodes, input_shape[1]);
-                this.weights.add(w);
-                double[][] b = new double[nodes][input_shape[0]];
-                this.biases.add(b);
+                this.weights.add(i, w);
+                double[][] b = new double[nodes][output_shape[0]];
+                this.biases.add(i, b);
             }
         }
     }
@@ -58,49 +62,58 @@ public class Network {
     }
 
     public void backProp(double[][] X, double[][] Y) {
-        // iterate backwards through layers
-        for (int i = 0; i < this.weights.size() ; i++) {
+
+        this.dbiases = (ArrayList<double[][]>) this.biases.clone();
+        this.dweights = (ArrayList<double[][]>) this.weights.clone();
+
+        for (int i = this.layers - 1; i >= 0; i--) {
+
             double[][] dZ;
             double[][] dW;
             double[][] db;
-            System.out.println(this.dweights.size());
 
             // last layer
-            if (i == 0) {
+            if (i == this.layers - 1) {
+                System.out.printf("Last layer: %d\n", i);
                 dZ = np.subtract(this.A.get(A.size() - 1), Y);
                 dW = np.divide(np.dot(dZ, np.T(this.A.get(A.size() - 1))), this.output_shape[0]);
                 db = np.divide(dZ, this.output_shape[0]);
-                this.dweights.add(dZ);
+                this.dweights.add(i, dW);
+                this.dbiases.add(i, db);
+                System.out.println(np.shape(this.weights.get(i)));
             }
             // first layer
-            else if (i == this.weights.size() - 1) {
-                dZ = np.multiply(np.dot(np.T(this.weights.get(i+1)), this.dweights.get(i-1)), np.subtract(1.0, np.power(this.A.get(i), 2)));
+            else if (i == 0) {
+                System.out.printf("First layer: %d\n", i);
+                System.out.println(np.shape(this.weights.get(i+1)));
+                System.out.println(np.shape(np.dot(np.T(this.weights.get(i+1)),this.dweights.get(i+1))));
+                System.out.println(np.shape(np.subtract(1.0, np.power(this.A.get(i), 2))));
+                dZ = np.multiply(
+                        np.dot(
+                                np.T(this.weights.get(i+1)),
+                                this.dweights.get(i+1)),
+                        np.subtract(1.0, np.power(this.A.get(i), 2)));
                 dW = np.divide(np.dot(dZ, np.T(X)), this.output_shape[0]);
                 db = np.divide(dZ, this.output_shape[0]);
-                this.dweights.add(dZ);
+                this.dweights.add(i, dW);
+                this.dbiases.add(i, db);
             }
             else {
+                System.out.printf("Hidden layer: %d\n", i);
                 // TODO add logic for hidden layers
                 dZ = np.multiply(np.dot(np.T(this.weights.get(i+1)), this.dweights.get(i+1)), np.subtract(1.0, np.power(this.A.get(i), 2)));
-                dW = np.divide(np.dot(dZ, np.T(this.A.get(i-1))), this.output_shape[0]);
+                dW = np.divide(np.dot(dZ, np.T(this.A.get(i+1))), this.output_shape[0]);
                 db = np.divide(dZ, this.output_shape[0]);
-                this.dweights.add(dZ);
+                this.dweights.add(i, dW);
+                this.dbiases.add(i, db);
             }
-            // gradient descent
-//            System.out.println(dW.length);
-//            System.out.println(db.length);
-//            System.out.println(i);
-            gradientDescent(dW, db, this.layers - i - 1);
         }
     }
 
     public void gradientDescent(double [][] dW, double[][] db, int i) {
-        System.out.println(np.shape(this.weights.get(i)));
-        System.out.println(np.print(this.weights.get(i)));
         double [][] W = np.subtract(this.weights.get(i), np.multiply(0.01, dW));
         this.weights.set(i, W);
 
-        System.out.println(biases.size());
         double[][] b = np.subtract(this.biases.get(i), np.multiply(0.01, db));
         this.biases.set(i, b);
     }
