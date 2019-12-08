@@ -391,4 +391,25 @@ public class np {
     public static void print(String val) {
         System.out.println(val);
     }
+
+    public static String print(double[] x) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < x.length; i++) {
+            sb.append(" "+ x[i] +",");
+        }
+        sb.append(" ]");
+        return sb.toString();
+    }
+
+    public static String print(double[][] x) {
+        StringBuilder sb = new StringBuilder();
+        System.out.println(x.length);
+        // outer loop through rows
+        for (int i = 0; i < x.length; i++) {
+            sb.append(print(x[i]));
+            sb.append(",\n");
+        }
+        return sb.toString();
+    }
 }
