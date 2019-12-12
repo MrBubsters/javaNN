@@ -3,11 +3,6 @@ package model;
 import java.util.Arrays;
 import java.util.Random;
 
-/**
- *
- * @author Deus Jeraldy
- * @Email: deusjeraldy@gmail.com
- */
 public class np {
 
     private static Random random;
@@ -18,45 +13,19 @@ public class np {
         random = new Random(seed);
     }
 
-    /**
-     * Sets the seed of the pseudo-random number generator. This method enables
-     * you to produce the same sequence of "random" number for each execution of
-     * the program. Ordinarily, you should call this method at most once per
-     * program.
-     *
-     * @param s the seed
-     */
     public static void setSeed(long s) {
         seed = s;
         random = new Random(seed);
     }
 
-    /**
-     * Returns the seed of the pseudo-random number generator.
-     *
-     * @return the seed
-     */
     public static long getSeed() {
         return seed;
     }
 
-    /**
-     * Returns a random real number uniformly in [0, 1).
-     *
-     * @return a random real number uniformly in [0, 1)
-     */
     public static double uniform() {
         return random.nextDouble();
     }
 
-    /**
-     * Returns a random integer uniformly in [0, n).
-     *
-     * @param n number of possible integers
-     * @return a random integer uniformly between 0 (inclusive) and {@code n}
-     * (exclusive)
-     * @throws IllegalArgumentException if {@code n <= 0}
-     */
     public static int uniform(int n) {
         if (n <= 0) {
             throw new IllegalArgumentException("argument must be positive: " + n);
@@ -64,14 +33,6 @@ public class np {
         return random.nextInt(n);
     }
 
-    /**
-     * Returns a random long integer uniformly in [0, n).
-     *
-     * @param n number of possible {@code long} integers
-     * @return a random long integer uniformly between 0 (inclusive) and
-     * {@code n} (exclusive)
-     * @throws IllegalArgumentException if {@code n <= 0}
-     */
     public static long uniform(long n) {
         if (n <= 0L) {
             throw new IllegalArgumentException("argument must be positive: " + n);
@@ -93,15 +54,6 @@ public class np {
         return r;
     }
 
-    /**
-     * Returns a random integer uniformly in [a, b).
-     *
-     * @param a the left endpoint
-     * @param b the right endpoint
-     * @return a random integer uniformly in [a, b)
-     * @throws IllegalArgumentException if {@code b <= a}
-     * @throws IllegalArgumentException if {@code b - a >= Integer.MAX_VALUE}
-     */
     public static int uniform(int a, int b) {
         if ((b <= a) || ((long) b - a >= Integer.MAX_VALUE)) {
             throw new IllegalArgumentException("invalid range: [" + a + ", " + b + ")");
@@ -109,14 +61,6 @@ public class np {
         return a + uniform(b - a);
     }
 
-    /**
-     * Returns a random real number uniformly in [a, b).
-     *
-     * @param a the left endpoint
-     * @param b the right endpoint
-     * @return a random real number uniformly in [a, b)
-     * @throws IllegalArgumentException unless {@code a < b}
-     */
     public static double uniform(double a, double b) {
         if (!(a < b)) {
             throw new IllegalArgumentException("invalid range: [" + a + ", " + b + ")");
@@ -124,11 +68,6 @@ public class np {
         return a + uniform() * (b - a);
     }
 
-    /**
-     * @param m
-     * @param n
-     * @return random m-by-n matrix with values between 0 and 1
-     */
     public static double[][] random(int m, int n) {
         double[][] a = new double[m][n];
         for (int i = 0; i < m; i++) {
@@ -139,12 +78,6 @@ public class np {
         return a;
     }
 
-    /**
-     * Transpose of a matrix
-     *
-     * @param a matrix
-     * @return b = A^T
-     */
     public static double[][] T(double[][] a) {
         int m = a.length;
         int n = a[0].length;
@@ -157,11 +90,6 @@ public class np {
         return b;
     }
 
-    /**
-     * @param a matrix
-     * @param b matrix
-     * @return c = a + b
-     */
     public static double[][] add(double[][] a, double[][] b) {
         int m = a.length;
         int n = a[0].length;
@@ -174,11 +102,6 @@ public class np {
         return c;
     }
 
-    /**
-     * @param a matrix
-     * @param b matrix
-     * @return c = a - b
-     */
     public static double[][] subtract(double[][] a, double[][] b) {
         int m = a.length;
         int n = a[0].length;
@@ -191,13 +114,6 @@ public class np {
         return c;
     }
 
-    /**
-     * Element wise subtraction
-     *
-     * @param a scaler
-     * @param b matrix
-     * @return c = a - b
-     */
     public static double[][] subtract(double a, double[][] b) {
         int m = b.length;
         int n = b[0].length;
@@ -210,11 +126,6 @@ public class np {
         return c;
     }
 
-    /**
-     * @param a matrix
-     * @param b matrix
-     * @return c = a * b
-     */
     public static double[][] dot(double[][] a, double[][] b) {
         int m1 = a.length;
         int n1 = a[0].length;
@@ -234,13 +145,6 @@ public class np {
         return c;
     }
 
-    /**
-     * Element wise multiplication
-     *
-     * @param a matrix
-     * @param x matrix
-     * @return y = a * x
-     */
     public static double[][] multiply(double[][] x, double[][] a) {
         int m = a.length;
         int n = a[0].length;
@@ -257,13 +161,6 @@ public class np {
         return y;
     }
 
-    /**
-     * Element wise multiplication
-     *
-     * @param a matrix
-     * @param x scaler
-     * @return y = a * x
-     */
     public static double[][] multiply(double x, double[][] a) {
         int m = a.length;
         int n = a[0].length;
@@ -277,13 +174,6 @@ public class np {
         return y;
     }
 
-    /**
-     * Element wise power
-     *
-     * @param x matrix
-     * @param a scaler
-     * @return y
-     */
     public static double[][] power(double[][] x, int a) {
         int m = x.length;
         int n = x[0].length;
@@ -297,10 +187,6 @@ public class np {
         return y;
     }
 
-    /**
-     * @param a matrix
-     * @return shape of matrix a
-     */
     public static String shape(double[][] a) {
         int m = a.length;
         int n = a[0].length;
@@ -308,10 +194,6 @@ public class np {
         return Vshape;
     }
 
-    /**
-     * @param a matrix
-     * @return sigmoid of matrix a
-     */
     public static double[][] sigmoid(double[][] a) {
         int m = a.length;
         int n = a[0].length;
@@ -325,13 +207,6 @@ public class np {
         return z;
     }
 
-    /**
-     * Element wise division
-     *
-     * @param a scaler
-     * @param x matrix
-     * @return x / a
-     */
     public static double[][] divide(double[][] x, int a) {
         int m = x.length;
         int n = x[0].length;
@@ -345,14 +220,7 @@ public class np {
         }
         return z;
     }
-    /**
-     * Element wise division
-     *
-     * @param A matrix
-     * @param Y matrix
-     * @param batch_size scaler
-     * @return loss
-     */
+
     public static double cross_entropy(int batch_size, double[][] Y, double[][] A) {
         int m = A.length;
         int n = A[0].length;
@@ -395,8 +263,8 @@ public class np {
     public static String print(double[] x) {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        for (int i = 0; i < x.length; i++) {
-            sb.append(" "+ x[i] +",");
+        for (double v : x) {
+            sb.append(" ").append(v).append(",");
         }
         sb.append(" ]");
         return sb.toString();
@@ -405,9 +273,10 @@ public class np {
     public static String print(double[][] x) {
         StringBuilder sb = new StringBuilder();
         System.out.println(x.length);
+
         // outer loop through rows
-        for (int i = 0; i < x.length; i++) {
-            sb.append(print(x[i]));
+        for (double[] doubles : x) {
+            sb.append(print(doubles));
             sb.append(",\n");
         }
         return sb.toString();

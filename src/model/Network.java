@@ -3,11 +3,11 @@ package model;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Network {
+class Network {
 
-    public final int layers;
+    final int layers;
     private final int[] input_shape;
-    public int nodes;
+    private int nodes;
     ArrayList<double[][]> weights = new ArrayList<double[][]>();
     ArrayList<double[][]> dweights = new ArrayList<double[][]>();
     ArrayList<double[][]> dzeights = new ArrayList<double[][]>();
@@ -17,7 +17,7 @@ public class Network {
     private int[] output_shape;
 
     // TODO add additional constructors
-    public Network(int layers, int nodes, int[] input_shape, int[] output_shape) {
+    Network(int layers, int nodes, int[] input_shape, int[] output_shape) {
         this.output_shape = output_shape;
         this.input_shape = input_shape;
         this.layers = layers;
@@ -46,7 +46,7 @@ public class Network {
         this.dzeights = (ArrayList<double[][]>) this.weights.clone();
     }
 
-    public double forwardProp(double[][] X, double[][] Y, int epoch) {
+    double forwardProp(double[][] X, double[][] Y, int epoch) {
         // iterate over total layers forward
         for (int i = 0; i < this.weights.size(); i++) {
             // first layer
@@ -76,7 +76,7 @@ public class Network {
         return np.cross_entropy(output_shape[0],Y, this.A.get(A.size()-1));
     }
 
-    public void backProp(double[][] X, double[][] Y) {
+    void backProp(double[][] X, double[][] Y) {
 
         for (int i = this.layers - 1; i >= 0; i--) {
 
@@ -122,11 +122,7 @@ public class Network {
                 (512,4)
                 (512,4)
                  */
-                dZ = np.multiply(
-                        np.dot(
-                                np.T(this.weights.get(i+1)),
-                                this.dzeights.get(i+1)),
-                        np.subtract(1.0, np.power(this.A.get(i), 2)));
+                dZ = np.multiply(np.dot(np.T(this.weights.get(i+1)),this.dzeights.get(i+1)),np.subtract(1.0, np.power(this.A.get(i), 2)));
                 dW = np.divide(np.dot(dZ, np.T(X)), this.output_shape[0]);
                 db = np.divide(dZ, this.output_shape[0]);
                 this.dweights.set(i, dW);
@@ -146,12 +142,12 @@ public class Network {
         }
     }
 
-    public void gradientDescent() {
+    void gradientDescent(double learningRate) {
         for (int i = 0; i < this.layers - 1; i++) {
-            double [][] W = np.subtract(this.weights.get(i), np.multiply(0.01, this.dweights.get(i)));
+            double [][] W = np.subtract(this.weights.get(i), np.multiply(learningRate, this.dweights.get(i)));
             this.weights.set(i, W);
 
-            double[][] b = np.subtract(this.biases.get(i), np.multiply(0.01, this.dbiases.get(i)));
+            double[][] b = np.subtract(this.biases.get(i), np.multiply(learningRate, this.dbiases.get(i)));
             this.biases.set(i, b);
         }
     }
